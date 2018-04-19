@@ -28,11 +28,8 @@ dependencies:
       ```
       如果想要响应微信resp需要在mainActivity同级目录下创建wxapi文件夹
       下面新建WXEntryACtivity集成Activity
-      例如
-      ```
-    public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
-
-
+      例如：
+    ```
     private IWXAPI api;
 
     @Override
@@ -83,7 +80,6 @@ dependencies:
     protected void onNewIntent(Intent intent) {
         api.handleIntent(intent, this);
     }
- }
 * IOS
     * add a wechat key.
          * 在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
