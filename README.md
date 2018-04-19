@@ -84,6 +84,25 @@ dependencies:
     * add a wechat key.
          * 在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
          * https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=1417694084&token=&lang=zh_CN
+         重写项目的AppDelegate的handleOpenURL和openURL方法
+```         
+         - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+      {
+         return  [WXApi handleOpenURL:url delegate:self];
+      }
+        - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString     *)sourceApplication annotation:(id)annotation
+      {
+         BOOL isSuc = [WXApi handleOpenURL:url delegate:self];
+         NSLog(@"url %@ isSuc %d",url,isSuc == YES ? 1 : 0);
+         return  isSuc;
+      }
+       - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+      {
+         return [WXApi handleOpenURL:url delegate:self];
+      }
+```
+         实现-(void) onResp:(BaseResp*)resp方法
+         
 ## How to use
 ```
 import 'package:flutter_wechat/flutter_wechat.dart';
