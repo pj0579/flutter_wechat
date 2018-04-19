@@ -70,17 +70,29 @@ class FlutterWechat {
   }
 
   static Future<bool> shareVideo(
-      {String imgUrl: "", int type: 0, String videoUrl: "", String title: "", String description: "",String videoLowBandUrl:""}) async {
+      {String imgUrl: "", int type: 0, String videoUrl: "", String title: "", String description: "", String videoLowBandUrl: ""}) async {
     final Map<String, dynamic> params = <String, dynamic>{
       'type': type,
       'imgUrl': imgUrl,
       'videoUrl': videoUrl,
       'title': title,
       'description': description,
-      'videoLowBandUrl':videoLowBandUrl
+      'videoLowBandUrl': videoLowBandUrl
     };
     await _channel.invokeMethod(
         'shareVideo',
+        params);
+    return true;
+  }
+
+  static Future<bool> login(
+      {String scope: "snsapi_userinfo", String state: "login",}) async {
+    final Map<String, dynamic> params = <String, dynamic>{
+      'scope': scope,
+      'state': state
+    };
+    await _channel.invokeMethod(
+        'login',
         params);
     return true;
   }

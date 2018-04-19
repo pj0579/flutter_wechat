@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
@@ -42,7 +43,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  */
 public class FlutterWechatPlugin implements MethodCallHandler {
 
-
+    private static String code;//获取access_code
     private static IWXAPI iwxapi;
     private Context c;
     private String wxId;
@@ -108,6 +109,14 @@ public class FlutterWechatPlugin implements MethodCallHandler {
             return false;
         }
     });
+
+    public static String getCode() {
+        return code;
+    }
+
+    public static void setCode(String tCode) {
+        code = tCode;
+    }
 
     private FlutterWechatPlugin(Context context) {
         c = context;
@@ -229,6 +238,14 @@ public class FlutterWechatPlugin implements MethodCallHandler {
                     }
                 }.start();
 
+                break;
+            case "login":
+                final String scope = call.argument("scope");
+                final String state = call.argument("state");
+                SendAuth.Req sendReq = new SendAuth.Req();
+                sendReq.scope = scope;
+                sendReq.state = state;
+                iwxapi.sendReq(sendReq);
                 break;
             default:
                 result.notImplemented();
