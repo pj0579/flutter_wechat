@@ -3,7 +3,7 @@
 A  flutter plugin to use wechat.
 
 ## Features
-- [ ]  Add Login
+- [X]  Add Login
 - [ ]  Add Pay
 - [ ]  Support LocalImage
 - [ ]  Support 分享小程序
