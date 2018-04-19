@@ -83,9 +83,9 @@ dependencies:
 * IOS
     * add a wechat key.
          * 在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
-         * https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=1417694084&token=&lang=zh_CN
-         重写项目的AppDelegate的handleOpenURL和openURL方法
-```         
+         * https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=1417694084&token=&lang=zh_CN
+<br/> 重写项目的AppDelegate的handleOpenURL和openURL方法         
+```        
          - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
       {
          return  [WXApi handleOpenURL:url delegate:self];
