@@ -26,6 +26,64 @@ dependencies:
        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
        <uses-permission android:name="android.permission.WRITE_SETTINGS" />
       ```
+      如果想要响应微信resp需要在mainActivity同级目录下创建wxapi文件夹
+      下面新建WXEntryACtivity集成Activity
+      例如
+      ```
+    public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
+
+
+    private IWXAPI api;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        api = WXAPIFactory.createWXAPI(this, "wxb25d3dec3db1affc", false);
+        onNewIntent(getIntent());
+        finish();
+    }
+
+    @Override
+    public void onReq(BaseReq baseReq) {
+
+    }
+
+    @Override
+    public void onResp(BaseResp baseResp) {
+        String toastString = "";
+        switch (baseResp.errCode) {
+            case 0:
+                toastString = "操作成功";
+                if (baseResp instanceof SendAuth.Resp) {
+                    SendAuth.Resp newResp = (SendAuth.Resp) baseResp;
+                    //获取微信传回的code
+                    String code = newResp.code;
+                    FlutterWechatPlugin.setCode(code);
+                }
+                break;
+            case -1:
+                toastString = "一般错误";
+                break;
+            case -2:
+                toastString = "取消操作";
+                break;
+            case -3:
+                toastString = "发送失败";
+                break;
+            case -4:
+                toastString = "认证拒绝";
+                break;
+            case -5:
+                toastString = "帐号禁用";
+                break;
+        }
+        Toast.makeText(this, toastString, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void onNewIntent(Intent intent) {
+        api.handleIntent(intent, this);
+    }
+ }
 * IOS
     * add a wechat key.
          * 在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
