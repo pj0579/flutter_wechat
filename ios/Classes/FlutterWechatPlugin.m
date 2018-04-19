@@ -97,6 +97,14 @@
         req.scene = type==0?WXSceneSession:WXSceneTimeline;
         [WXApi sendReq:req];
         result(nil);
+    }else if([@"login" isEqualToString:call.method]){
+        NSString* scope= arguments[@"scope"];
+        NSString* state= arguments[@"state"];
+        SendAuthReq* req =[[SendAuthReq alloc] init];
+        req.scope = scope;
+        req.state = state;
+        //第三方向微信终端发送一个SendAuthReq消息结构
+        [WXApi sendReq:req];
     }
     
 }

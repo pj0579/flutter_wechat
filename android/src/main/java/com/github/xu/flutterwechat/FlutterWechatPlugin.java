@@ -61,13 +61,9 @@ public class FlutterWechatPlugin implements MethodCallHandler {
                     if (bitmap != null) {
                         wxMsg.setThumbImage(bitmap);
                     }
-
                     req.transaction = String.valueOf(System.currentTimeMillis());
                     req.message = wxMsg;
-
-
                     iwxapi.sendReq(req);
-
                     break;
                 case 1:
                     if (bitmap != null) {
@@ -100,7 +96,6 @@ public class FlutterWechatPlugin implements MethodCallHandler {
                     }
                     req.transaction = String.valueOf(System.currentTimeMillis());
                     req.message = wxMsg;
-
                     iwxapi.sendReq(req);
                     break;
                 default:

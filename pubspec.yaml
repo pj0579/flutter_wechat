@@ -1,6 +1,6 @@
 name: flutter_wechat
 description: A  flutter plugin to use wechat
-version: 0.0.7
+version: 0.0.9
 author: pj0579<1095584555@qq.com>
 homepage: https://github.com/pj0579/flutter_wechat
 environment:
