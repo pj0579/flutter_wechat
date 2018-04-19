@@ -79,8 +79,7 @@ dependencies:
     protected void onNewIntent(Intent intent) {
         api.handleIntent(intent, this);
     }
-```
-
+ ```
 * IOS
     * add a wechat key.
          * 在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
