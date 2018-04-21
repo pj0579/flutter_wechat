@@ -3,14 +3,17 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class FlutterWechat {
-
-  static const MethodChannel _channel =
-  const MethodChannel('flutter_wechat');
-
+  String code;
+  static Stream<int> _SendAuthResp;
+  static const EventChannel _eventChannel = const EventChannel('SendAuthResp');
+  static const MethodChannel _channel = const MethodChannel('flutter_wechat');
+  StreamSubscription _timerSubscription = null;
   static void registerWechat(String wxId) async {
+    print("11111123");
     await _channel.invokeMethod(
         'registerWechat', {'wxId': wxId});
   }
+
 
   static Future<bool> shareWebPage(
       {String webpageUrl: "", String title: "title", String description: "description", int type: 0, String imgUrl: ""}) async {
@@ -95,5 +98,24 @@ class FlutterWechat {
         'login',
         params);
     return true;
+  }
+
+  static Future<bool> getCode() async {
+    await _channel.invokeMethod(
+        ' getCode');
+    return true;
+  }
+
+  static Future<String> getLoginCode() async {
+    String s = await _channel.invokeMethod(
+        'getLoginCode');
+    return s;
+  }
+
+  static Stream<dynamic> get SendAuthResp {
+    if (_SendAuthResp == null) {
+      return _eventChannel.receiveBroadcastStream();
+    }
+    return _SendAuthResp;
   }
 }

@@ -1,12 +1,28 @@
 #import "FlutterWechatPlugin.h"
 
-@implementation FlutterWechatPlugin
+@implementation FlutterWechatPlugin {
+    FlutterEventSink _eventSink;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    return self;
+}
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
     FlutterMethodChannel* channel = [FlutterMethodChannel
                                      methodChannelWithName:@"flutter_wechat"
                                      binaryMessenger:[registrar messenger]];
+    FlutterEventChannel* eventChannel =
+    [FlutterEventChannel eventChannelWithName:@"SendAuthResp"
+                              binaryMessenger:[registrar messenger]];
     FlutterWechatPlugin* instance = [[FlutterWechatPlugin alloc] init];
     [registrar addMethodCallDelegate:instance channel:channel];
+    [eventChannel setStreamHandler:instance];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -14,6 +30,7 @@
     NSNumber* wxType = arguments[@"type"];
     int type=[wxType intValue];
     if ([@"registerWechat" isEqualToString:call.method]) {
+        NSLog(@"registerWechat");
         [WXApi registerApp:arguments[@"wxId"]];
         result(nil);
     }
@@ -103,10 +120,64 @@
         SendAuthReq* req =[[SendAuthReq alloc] init];
         req.scope = scope;
         req.state = state;
+
         //第三方向微信终端发送一个SendAuthReq消息结构
         [WXApi sendReq:req];
+        result(nil);
+    }
+}
+-(BOOL)handleOpenURL:(NSNotification *)aNotification
+{
+    NSString * aURLString =  [aNotification userInfo][@"url"];
+    NSURL * aURL = [NSURL URLWithString:aURLString];
+    if ([WXApi handleOpenURL:aURL delegate:self])
+    {
+        return YES;
+    } else {
+        return NO;
     }
     
 }
+
+-(void) onResp:(BaseResp*)resp
+{
+    if([resp isKindOfClass:[SendMessageToWXResp class]])
+    {
+         _eventSink([NSString stringWithFormat:@"%d",resp.errCode]);
+    } else if ([resp isKindOfClass:[SendAuthResp class]]) {
+        SendAuthResp *r = (SendAuthResp *)resp;
+        if (!_eventSink) return;
+        if (r.errCode == WXSuccess)
+        {
+           _eventSink(resp.code);
+        }else{
+            _eventSink([NSString stringWithFormat:@"%d",r.errCode]);
+        }
+        if(resp.errCode==WXSuccess){
+            
+        }else{
+            
+        }
+    } else if ([resp isKindOfClass:[PayResp class]]) {
+        
+    }
+}
+#pragma mark FlutterStreamHandler impl
+
+- (FlutterError*)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)eventSink {
+    _eventSink = eventSink;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleOpenURL:)
+                                                 name:@"WeChat"
+                                               object:nil];
+    return nil;
+}
+
+- (FlutterError*)onCancelWithArguments:(id)arguments {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    _eventSink = nil;
+    return nil;
+}
+
 
 @end

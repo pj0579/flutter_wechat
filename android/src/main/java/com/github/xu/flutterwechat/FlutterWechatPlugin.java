@@ -1,7 +1,9 @@
 package com.github.xu.flutterwechat;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -32,24 +34,30 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.EventChannel.StreamHandler;
 
 /**
  * FlutterWechatPlugin
  */
-public class FlutterWechatPlugin implements MethodCallHandler {
+public class FlutterWechatPlugin implements MethodCallHandler, StreamHandler {
 
-    private static String code;//获取access_code
+    private static int code;//返回错误吗
+    private static String loginCode;//获取access_code
     private static IWXAPI iwxapi;
     private Context c;
     private String wxId;
     private Bitmap bitmap;
     private WXMediaMessage wxMsg;
     private int type = 0;
+    private final PluginRegistry.Registrar registrar;
+    private BroadcastReceiver sendRespReceiver;
     private Handler mHandler = new Handler(new Handler.Callback() {
 
         @Override
@@ -105,15 +113,27 @@ public class FlutterWechatPlugin implements MethodCallHandler {
         }
     });
 
-    public static String getCode() {
+    public static int getCode() {
+
         return code;
     }
 
-    public static void setCode(String tCode) {
+    public static void setCode(int tCode) {
+
         code = tCode;
     }
 
-    private FlutterWechatPlugin(Context context) {
+    public static String getLoginCode() {
+        return loginCode;
+    }
+
+    public static void setLoginCode(String tCode) {
+
+        loginCode = tCode;
+    }
+
+    private FlutterWechatPlugin(Context context, Registrar registrar) {
+        this.registrar = registrar;
         c = context;
     }
 
@@ -122,7 +142,11 @@ public class FlutterWechatPlugin implements MethodCallHandler {
      */
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_wechat");
-        channel.setMethodCallHandler(new FlutterWechatPlugin(registrar.context()));
+        final EventChannel eventChannel =
+                new EventChannel(registrar.messenger(), "SendAuthResp");
+        final FlutterWechatPlugin instance = new FlutterWechatPlugin(registrar.context(), registrar);
+        eventChannel.setStreamHandler(instance);
+        channel.setMethodCallHandler(instance);
     }
 
 
@@ -279,4 +303,32 @@ public class FlutterWechatPlugin implements MethodCallHandler {
     }
 
 
+    @Override
+    public void onListen(Object o, EventChannel.EventSink eventSink) {
+        sendRespReceiver = createReceiver(eventSink);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("sendResp");
+        registrar.context().registerReceiver(sendRespReceiver, intentFilter);
+    }
+
+    @Override
+    public void onCancel(Object o) {
+        registrar.context().unregisterReceiver(sendRespReceiver);
+        sendRespReceiver = null;
+    }
+
+    private BroadcastReceiver createReceiver(final EventChannel.EventSink events) {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getStringExtra("type").equals("SendAuthResp")){
+                    events.success(intent.getStringExtra("code"));
+                }else if(intent.getStringExtra("type").equals("PayResp")){
+                    events.success(intent.getStringExtra("code"));
+                }else if(intent.getStringExtra("type").equals("ShareResp")){
+                    events.success(intent.getStringExtra("code"));
+                }
+            }
+        };
+    }
 }
