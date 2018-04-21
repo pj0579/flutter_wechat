@@ -39,43 +39,31 @@ dependencies:
         finish();
     }
 
-    @Override
+        @Override
     public void onReq(BaseReq baseReq) {
 
     }
 
     @Override
     public void onResp(BaseResp baseResp) {
-        String toastString = "";
-        switch (baseResp.errCode) {
-            case 0:
-                toastString = "操作成功";
-                if (baseResp instanceof SendAuth.Resp) {
-                    SendAuth.Resp newResp = (SendAuth.Resp) baseResp;
-                    //获取微信传回的code
-                    String code = newResp.code;
-                    FlutterWechatPlugin.setCode(code);
-                }
-                break;
-            case -1:
-                toastString = "一般错误";
-                break;
-            case -2:
-                toastString = "取消操作";
-                break;
-            case -3:
-                toastString = "发送失败";
-                break;
-            case -4:
-                toastString = "认证拒绝";
-                break;
-            case -5:
-                toastString = "帐号禁用";
-                break;
-        }
-        Toast.makeText(this, toastString, Toast.LENGTH_SHORT).show();
+        sendBroadcastToWechat(baseResp);
     }
 
+    private void sendBroadcastToWechat(BaseResp baseResp) {
+        Intent intent = new Intent();
+        intent.setAction("sendResp");
+        if (baseResp instanceof SendAuth.Resp) {
+            SendAuth.Resp resp = (SendAuth.Resp) (baseResp);
+            intent.putExtra("code", resp.errCode == 0 ? resp.code : "-1");
+            intent.putExtra("type", "SendAuthResp");
+            sendBroadcast(intent);
+        } else {
+            intent.setAction("sendResp");
+            intent.putExtra("code", baseResp.errCode + "");
+            intent.putExtra("type", "ShareResp");
+            sendBroadcast(intent);
+        }
+    }
     protected void onNewIntent(Intent intent) {
         api.handleIntent(intent, this);
     }
@@ -86,26 +74,34 @@ dependencies:
          * https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=1417694084&token=&lang=zh_CN
 <br/> 重写项目的AppDelegate的handleOpenURL和openURL方法         
 ```        
-         - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-      {
-         return  [WXApi handleOpenURL:url delegate:self];
-      }
-        - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString     *)sourceApplication annotation:(id)annotation
-      {
-         BOOL isSuc = [WXApi handleOpenURL:url delegate:self];
-         NSLog(@"url %@ isSuc %d",url,isSuc == YES ? 1 : 0);
-         return  isSuc;
-      }
-       - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
-      {
-         return [WXApi handleOpenURL:url delegate:self];
-      }
+     // ios 8.x or older
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+     NSString * urlStr = [url absoluteString];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"WeChat" object:nil userInfo:@{@"url":urlStr}];
+    return YES;
+}
+
+// ios 9.0+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+            options:(NSDictionary<NSString*, id> *)options
+{
+    NSString * urlStr = [url absoluteString];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"WeChat" object:nil userInfo:@{@"url":urlStr}];
+    return YES;
+}
 ```
-         实现-(void) onResp:(BaseResp*)resp方法
          
 ## How to use
 ```
 import 'package:flutter_wechat/flutter_wechat.dart';
+返回键听
+FlutterWechat.SendAuthResp.listen((state) {
+      print("state $state");
+});
 注册
 await FlutterWechat.registerWechat("wxxxxxx");// 微信注册需要在你需要的地方注册，最好是app首页
 分享
@@ -116,4 +112,5 @@ await FlutterWechat.shareVideo(imgUrl: "xxx", videoUrl:"",title:"",description:"
 await FlutterWechat.shareWebPage(imgUrl: "xxx", webpageUrl:"",title:"",description:"",type:0,);
 登录
 await FlutterWechat.login(scope:"",state:"");
+
 
