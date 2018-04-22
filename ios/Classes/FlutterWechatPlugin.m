@@ -127,17 +127,17 @@
         PayReq *request = [[PayReq alloc] init];
         NSString* partnerId= arguments[@"partnerId"];
         NSString* prepayId= arguments[@"prepayId"];
-        NSString* packag= arguments[@"packag"];
+        NSString* package= arguments[@"package"];
         NSString* nonceStr= arguments[@"nonceStr"];
-        NSString* timeStamp= arguments[@"timeStam"];
+        NSString* time= arguments[@"timeStamp"];
         NSString* sign= arguments[@"sign"];
         request.partnerId = partnerId;
         request.prepayId= prepayId;
         request.package = package;
-        request.nonceStr= nonce
-        request.timeStamp= timeStamp;
+        request.nonceStr= nonceStr;
+        request.timeStamp= [time intValue];;
         request.sign = sign;
-        [WXApi sendReq：request];
+        [WXApi sendReq:request];
         result(nil);
     }
 }

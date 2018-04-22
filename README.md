@@ -11,7 +11,7 @@ A  flutter plugin to use wechat.
 Add this to your package's pubspec.yaml file:
 ```
 dependencies:
-  flutter_wechat: "^0.1.1"
+  flutter_wechat: "^0.1.2"
  ```
 ## Getting Started
 

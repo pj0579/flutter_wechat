@@ -105,7 +105,7 @@ class FlutterWechat {
     String partnerId: "",
     String prepayId: "",
     String nonceStr: "",
-    String timeStampe: "",
+    String timeStamp: "",
     String sign: "",
     String package: "",
     String appId: "",
