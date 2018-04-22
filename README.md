@@ -116,5 +116,5 @@ await FlutterWechat.shareWebPage(imgUrl: "xxx", webpageUrl:"",title:"",descripti
 登录
 await FlutterWechat.login(scope:"",state:"");
 支付
-await FlutterWechat.pay(partnerId: "",prepayId: "",nonceStr: "",timeStampe: "",sign: "",package: "",appId: "",);//具体参考微信参数传递
+await FlutterWechat.pay(partnerId: "",prepayId: "",nonceStr: "",timeStamp: "",sign: "",package: "",appId: "",);//具体参考微信参数传递
 
