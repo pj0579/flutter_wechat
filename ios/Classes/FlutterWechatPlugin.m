@@ -30,7 +30,6 @@
     NSNumber* wxType = arguments[@"type"];
     int type=[wxType intValue];
     if ([@"registerWechat" isEqualToString:call.method]) {
-        NSLog(@"registerWechat");
         [WXApi registerApp:arguments[@"wxId"]];
         result(nil);
     }
@@ -124,6 +123,22 @@
         //第三方向微信终端发送一个SendAuthReq消息结构
         [WXApi sendReq:req];
         result(nil);
+    }else if([@"pay" isEqualToString:call.method]){
+        PayReq *request = [[PayReq alloc] init];
+        NSString* partnerId= arguments[@"partnerId"];
+        NSString* prepayId= arguments[@"prepayId"];
+        NSString* packag= arguments[@"packag"];
+        NSString* nonceStr= arguments[@"nonceStr"];
+        NSString* timeStamp= arguments[@"timeStam"];
+        NSString* sign= arguments[@"sign"];
+        request.partnerId = partnerId;
+        request.prepayId= prepayId;
+        request.package = package;
+        request.nonceStr= nonce
+        request.timeStamp= timeStamp;
+        request.sign = sign;
+        [WXApi sendReq：request];
+        result(nil);
     }
 }
 -(BOOL)handleOpenURL:(NSNotification *)aNotification
@@ -149,17 +164,12 @@
         if (!_eventSink) return;
         if (r.errCode == WXSuccess)
         {
-           _eventSink(resp.code);
+           _eventSink(r.code);
         }else{
             _eventSink([NSString stringWithFormat:@"%d",r.errCode]);
         }
-        if(resp.errCode==WXSuccess){
-            
-        }else{
-            
-        }
     } else if ([resp isKindOfClass:[PayResp class]]) {
-        
+        _eventSink([NSString stringWithFormat:@"%d",resp.errCode]);
     }
 }
 #pragma mark FlutterStreamHandler impl

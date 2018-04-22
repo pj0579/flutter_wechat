@@ -21,6 +21,7 @@ import com.tencent.mm.opensdk.modelmsg.WXMusicObject;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 import com.tencent.mm.opensdk.modelmsg.WXVideoObject;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -266,6 +267,24 @@ public class FlutterWechatPlugin implements MethodCallHandler, StreamHandler {
                 sendReq.state = state;
                 iwxapi.sendReq(sendReq);
                 break;
+            case "pay":
+                final String appId = call.argument("appId");
+                final String partnerId = call.argument("partnerId");
+                final String prepayId = call.argument("prepayId");
+                final String nonceStr = call.argument("nonceStr");
+                final String timeStampe = call.argument("timeStamp");
+                final String sign = call.argument("sign");
+                final String packageValue = call.argument("package");
+                PayReq payReq = new PayReq();
+                payReq.partnerId = partnerId;
+                payReq.prepayId = prepayId;
+                payReq.nonceStr = nonceStr;
+                payReq.timeStamp = timeStampe;
+                payReq.sign = sign;
+                payReq.packageValue = packageValue;
+                payReq.appId = appId;
+                iwxapi.sendReq(payReq);
+                break;
             default:
                 result.notImplemented();
                 break;
@@ -321,11 +340,11 @@ public class FlutterWechatPlugin implements MethodCallHandler, StreamHandler {
         return new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(intent.getStringExtra("type").equals("SendAuthResp")){
+                if (intent.getStringExtra("type").equals("SendAuthResp")) {
                     events.success(intent.getStringExtra("code"));
-                }else if(intent.getStringExtra("type").equals("PayResp")){
+                } else if (intent.getStringExtra("type").equals("PayResp")) {
                     events.success(intent.getStringExtra("code"));
-                }else if(intent.getStringExtra("type").equals("ShareResp")){
+                } else if (intent.getStringExtra("type").equals("ShareResp")) {
                     events.success(intent.getStringExtra("code"));
                 }
             }

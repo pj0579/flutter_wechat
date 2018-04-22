@@ -8,8 +8,8 @@ class FlutterWechat {
   static const EventChannel _eventChannel = const EventChannel('SendAuthResp');
   static const MethodChannel _channel = const MethodChannel('flutter_wechat');
   StreamSubscription _timerSubscription = null;
+
   static void registerWechat(String wxId) async {
-    print("11111123");
     await _channel.invokeMethod(
         'registerWechat', {'wxId': wxId});
   }
@@ -100,16 +100,19 @@ class FlutterWechat {
     return true;
   }
 
-  static Future<bool> getCode() async {
-    await _channel.invokeMethod(
-        ' getCode');
-    return true;
-  }
 
-  static Future<String> getLoginCode() async {
-    String s = await _channel.invokeMethod(
-        'getLoginCode');
-    return s;
+  static Future<bool> pay({
+    String partnerId: "",
+    String prepayId: "",
+    String nonceStr: "",
+    String timeStampe: "",
+    String sign: "",
+    String package: "",
+    String appId: "",
+  }) async {
+    await _channel.invokeMethod(
+        'pay');
+    return true;
   }
 
   static Stream<dynamic> get SendAuthResp {

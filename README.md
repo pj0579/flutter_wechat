@@ -4,14 +4,14 @@ A  flutter plugin to use wechat.
 
 ## Features
 - [X]  Add Login
-- [ ]  Add Pay
+- [X]  Add Pay
 - [ ]  Support LocalImage
 - [ ]  Support 分享小程序
 ## Install
 Add this to your package's pubspec.yaml file:
 ```
 dependencies:
-  flutter_wechat: "^0.0.7"
+  flutter_wechat: "^0.1.1"
  ```
 ## Getting Started
 
@@ -112,5 +112,6 @@ await FlutterWechat.shareVideo(imgUrl: "xxx", videoUrl:"",title:"",description:"
 await FlutterWechat.shareWebPage(imgUrl: "xxx", webpageUrl:"",title:"",description:"",type:0,);
 登录
 await FlutterWechat.login(scope:"",state:"");
-
+支付
+await FlutterWechat.pay(partnerId: "",prepayId: "",nonceStr: "",timeStampe: "",sign: "",package: "",appId: "",);//具体参考微信参数传递
 
