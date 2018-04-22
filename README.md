@@ -100,6 +100,9 @@ dependencies:
 import 'package:flutter_wechat/flutter_wechat.dart';
 返回键听
 FlutterWechat.SendAuthResp.listen((state) {
+      //分享返回错误码 0为正确 -1 -2 -3- 4- 5
+      登录成功返回 access_code 登录错误返回 -1
+      支付成功返回 0为正确  -1 -2
       print("state $state");
 });
 注册
