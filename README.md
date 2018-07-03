@@ -98,11 +98,13 @@ dependencies:
 ## How to use
 ```
 import 'package:flutter_wechat/flutter_wechat.dart';
-
-//分享返回错误码 0为正确 -1 -2 -3- 4- 5
+```
+```
+      分享返回错误码 0为正确 -1 -2 -3- 4- 5
       登录成功返回 access_code 登录错误返回 -1
       支付成功返回 0为正确  -1 -2
-      
+``` 
+```
 注册
 await FlutterWechat.registerWechat("wxxxxxx").then((state){print(state)});// 微信注册需要在你需要的地方注册，最好是app首页
 分享
@@ -115,4 +117,4 @@ await FlutterWechat.shareWebPage(imgUrl: "xxx", webpageUrl:"",title:"",descripti
 await FlutterWechat.login(scope:"",state:"").then((state){print(state)});
 支付
 await FlutterWechat.pay(partnerId: "",prepayId: "",nonceStr: "",timeStamp: "",sign: "",package: "",appId: "",).then((state){print(state)});//具体参考微信参数传递
-
+```
