@@ -47,11 +47,12 @@ import io.flutter.plugin.common.EventChannel.StreamHandler;
 /**
  * FlutterWechatPlugin
  */
-public class FlutterWechatPlugin implements MethodCallHandler, StreamHandler {
+public class FlutterWechatPlugin implements MethodCallHandler {
 
     private static int code;//返回错误吗
     private static String loginCode;//获取access_code
     private static IWXAPI iwxapi;
+    private static  Result res;
     private Context c;
     private String wxId;
     private Bitmap bitmap;
@@ -143,22 +144,24 @@ public class FlutterWechatPlugin implements MethodCallHandler, StreamHandler {
      */
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_wechat");
-        final EventChannel eventChannel =
-                new EventChannel(registrar.messenger(), "SendAuthResp");
         final FlutterWechatPlugin instance = new FlutterWechatPlugin(registrar.context(), registrar);
-        eventChannel.setStreamHandler(instance);
         channel.setMethodCallHandler(instance);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("sendResp");
+        registrar.context().registerReceiver(createReceiver(), intentFilter);
     }
 
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
+        res=result;
         switch (call.method) {
             case "registerWechat":
                 wxId = call.argument("wxId");
                 iwxapi = WXAPIFactory.createWXAPI(c, wxId, true);
                 iwxapi.registerApp(wxId);
-                result.success(null);
+                res=result;
+                res.success(null);
                 break;
             case "shareWebPage":
                 WXWebpageObject webpage = new WXWebpageObject();
@@ -321,31 +324,18 @@ public class FlutterWechatPlugin implements MethodCallHandler, StreamHandler {
         }
     }
 
-
-    @Override
-    public void onListen(Object o, EventChannel.EventSink eventSink) {
-        sendRespReceiver = createReceiver(eventSink);
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("sendResp");
-        registrar.context().registerReceiver(sendRespReceiver, intentFilter);
-    }
-
-    @Override
-    public void onCancel(Object o) {
-        registrar.context().unregisterReceiver(sendRespReceiver);
-        sendRespReceiver = null;
-    }
-
-    private BroadcastReceiver createReceiver(final EventChannel.EventSink events) {
+    private static BroadcastReceiver createReceiver() {
         return new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                System.out.println(intent.getStringExtra("type"));
                 if (intent.getStringExtra("type").equals("SendAuthResp")) {
-                    events.success(intent.getStringExtra("code"));
+                    res.success(intent.getStringExtra("code"));
                 } else if (intent.getStringExtra("type").equals("PayResp")) {
-                    events.success(intent.getStringExtra("code"));
+                    res.success(intent.getStringExtra("code"));
                 } else if (intent.getStringExtra("type").equals("ShareResp")) {
-                    events.success(intent.getStringExtra("code"));
+                    System.out.println(intent.getStringExtra("code"));
+                    res.success(intent.getStringExtra("code"));
                 }
             }
         };

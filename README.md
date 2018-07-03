@@ -11,7 +11,7 @@ A  flutter plugin to use wechat.
 Add this to your package's pubspec.yaml file:
 ```
 dependencies:
-  flutter_wechat: "^0.1.2"
+  flutter_wechat: "^0.1.5"
  ```
 ## Getting Started
 
@@ -98,23 +98,16 @@ dependencies:
 ## How to use
 ```
 import 'package:flutter_wechat/flutter_wechat.dart';
-返回键听
-FlutterWechat.SendAuthResp.listen((state) {
-      //分享返回错误码 0为正确 -1 -2 -3- 4- 5
-      登录成功返回 access_code 登录错误返回 -1
-      支付成功返回 0为正确  -1 -2
-      print("state $state");
-});
 注册
-await FlutterWechat.registerWechat("wxxxxxx");// 微信注册需要在你需要的地方注册，最好是app首页
+await FlutterWechat.registerWechat("wxxxxxx").then((state){print(state)});// 微信注册需要在你需要的地方注册，最好是app首页
 分享
-await FlutterWechat.shareText(text: "test", type:0,);//文字分享 type 0 聊天页面 1 朋友圈
-await FlutterWechat.shareImage(imgUrl: "xxx", type:0,);
-await FlutterWechat.shareMusic(imgUrl: "xxx", musicUrl:"",title:"",description:"",musicDataUrl:"",musicLowBandDataUrl:"",musicLowBandUrl:"",type:0,);
-await FlutterWechat.shareVideo(imgUrl: "xxx", videoUrl:"",title:"",description:"",videoLowBandUrl:"",type:0,);
-await FlutterWechat.shareWebPage(imgUrl: "xxx", webpageUrl:"",title:"",description:"",type:0,);
+await FlutterWechat.shareText(text: "test", type:0,).then((state){print(state)});//文字分享 type 0 聊天页面 1 朋友圈
+await FlutterWechat.shareImage(imgUrl: "xxx", type:0,).then((state){print(state)});
+await FlutterWechat.shareMusic(imgUrl: "xxx", musicUrl:"",title:"",description:"",musicDataUrl:"",musicLowBandDataUrl:"",musicLowBandUrl:"",type:0,).then((state){print(state)});
+await FlutterWechat.shareVideo(imgUrl: "xxx", videoUrl:"",title:"",description:"",videoLowBandUrl:"",type:0,).then((state){print(state)});
+await FlutterWechat.shareWebPage(imgUrl: "xxx", webpageUrl:"",title:"",description:"",type:0,).then((state){print(state)});
 登录
-await FlutterWechat.login(scope:"",state:"");
+await FlutterWechat.login(scope:"",state:"").then((state){print(state)});
 支付
-await FlutterWechat.pay(partnerId: "",prepayId: "",nonceStr: "",timeStampe: "",sign: "",package: "",appId: "",);//具体参考微信参数传递
+await FlutterWechat.pay(partnerId: "",prepayId: "",nonceStr: "",timeStampe: "",sign: "",package: "",appId: "",).then((state){print(state)});//具体参考微信参数传递
 

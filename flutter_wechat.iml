@@ -7,6 +7,9 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/example/.idea/libraries/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/example/.idea/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/example/android/.gradle/4.1/fileChanges/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/android/.gradle/4.1/fileContent/packages" />
@@ -104,7 +107,6 @@
       <excludeFolder url="file://$MODULE_DIR$/example/ios/build/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/ios/packages" />
       <excludeFolder url="file://$MODULE_DIR$/example/lib/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/example/packages" />
       <excludeFolder url="file://$MODULE_DIR$/packages" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
