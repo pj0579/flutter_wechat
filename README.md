@@ -17,7 +17,7 @@ dependencies:
 
 * Android
    * For Android, you must do the following before you can use the plugin:
-       * Add the permissions to your AndroidManifest.xml
+     Add the permissions to your AndroidManifest.xml
       ```
        <uses-permission android:name="android.permission.INTERNET" />
        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -70,9 +70,10 @@ dependencies:
  ```
 * IOS
     * add a wechat key.
-         * 在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
-         * https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=1417694084&token=&lang=zh_CN
-<br/> 重写项目的AppDelegate的handleOpenURL和openURL方法         
+        在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
+        参考 https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=1417694084&token=&lang=zh_CN
+<br/> <br/>
+    * 重写项目的AppDelegate的handleOpenURL和openURL方法         
 ```        
 // ios 8.x or older
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
