@@ -74,7 +74,7 @@ dependencies:
          * https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=1417694084&token=&lang=zh_CN
 <br/> 重写项目的AppDelegate的handleOpenURL和openURL方法         
 ```        
-     // ios 8.x or older
+// ios 8.x or older
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
@@ -83,7 +83,8 @@ dependencies:
      postNotificationName:@"WeChat" object:nil userInfo:@{@"url":urlStr}];
     return YES;
 }
-
+```
+```
 // ios 9.0+
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
             options:(NSDictionary<NSString*, id> *)options
