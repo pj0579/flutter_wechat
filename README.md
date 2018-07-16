@@ -17,7 +17,7 @@ dependencies:
 
 * Android
    * For Android, you must do the following before you can use the plugin:
-     Add the permissions to your AndroidManifest.xml
+     Add the permissions to your `AndroidManifest.xml`
       ```
        <uses-permission android:name="android.permission.INTERNET" />
        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,9 +26,8 @@ dependencies:
        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
        <uses-permission android:name="android.permission.WRITE_SETTINGS" />
       ```
-      如果想要响应微信resp需要在mainActivity同级目录下创建wxapi文件夹
-      下面新建WXEntryACtivity集成Activity
-      例如：
+      如果想要响应微信分享登录resp需要在mainActivity同级目录下创建wxapi文件夹
+      下面新建WXEntryACtivity集成Activity(需要在`AndroidManifest.xml`注册）
 ```
     private IWXAPI api;
     @Override
@@ -68,6 +67,47 @@ dependencies:
         api.handleIntent(intent, this);
     }
  ```
+ 如果想要响应微信支付resp需要在mainActivity同级目录下创建wxapi文件夹
+      下面新建WXEntryACtivity集成Activity
+ ```
+ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
+
+
+    private IWXAPI api;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        api = WXAPIFactory.createWXAPI(this, "wxb25d3dec3db1affc", false);
+        onNewIntent(getIntent());
+        finish();
+    }
+
+    @Override
+    public void onReq(BaseReq baseReq) {
+
+    }
+
+    @Override
+    public void onResp(BaseResp baseResp) {
+        sendBroadcastToWechat(baseResp);
+    }
+
+    private void sendBroadcastToWechat(BaseResp baseResp) {
+        Intent intent = new Intent();
+        intent.setAction("sendResp");
+        intent.putExtra("code", baseResp.errCode + "");
+        intent.putExtra("type", "PayResp");
+        sendBroadcast(intent);
+    }
+
+    protected void onNewIntent(Intent intent) {
+        api.handleIntent(intent, this);
+    }
+
+
+}
+```
 * IOS
     * add a wechat key.
         在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
