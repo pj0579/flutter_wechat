@@ -28,6 +28,7 @@ dependencies:
       ```
       如果想要响应微信分享登录resp需要在mainActivity同级目录下创建wxapi文件夹
       下面新建WXEntryACtivity集成Activity(需要在`AndroidManifest.xml`注册）
+       <activity android:name=".wxapi.WXEntryActivity"/>
 ```
     private IWXAPI api;
     @Override
@@ -68,20 +69,21 @@ dependencies:
     }
  ```
  如果想要响应微信支付resp需要在mainActivity同级目录下创建wxapi文件夹(需要在`AndroidManifest.xml`注册）
+ 
+    <activity
+      android:name=".wxapi.WXPayEntryActivity"
+      android:exported="true"
+      android:launchMode="singleTop">
+
+      <intent-filter>
+          <action android:name="android.intent.action.VIEW"/>
+          <category android:name="android.intent.category.DEFAULT"/>
+          <data android:scheme="your AppId"/>
+      </intent-filter>
+    </activity>
+ 
       下面新建WXEntryACtivity集成Activity
  ```
- <activity
-    android:name=".wxapi.WXPayEntryActivity"
-    android:exported="true"
-    android:launchMode="singleTop">
-
-    <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-        <data android:scheme="your AppId"/>
-    </intent-filter>
-
- </activity>
  public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
 
