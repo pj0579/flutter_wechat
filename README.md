@@ -67,9 +67,21 @@ dependencies:
         api.handleIntent(intent, this);
     }
  ```
- 如果想要响应微信支付resp需要在mainActivity同级目录下创建wxapi文件夹
+ 如果想要响应微信支付resp需要在mainActivity同级目录下创建wxapi文件夹(需要在`AndroidManifest.xml`注册）
       下面新建WXEntryACtivity集成Activity
  ```
+ <activity
+    android:name=".wxapi.WXPayEntryActivity"
+    android:exported="true"
+    android:launchMode="singleTop">
+
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:scheme="your AppId"/>
+    </intent-filter>
+
+ </activity>
  public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
 
