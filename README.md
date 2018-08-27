@@ -29,7 +29,7 @@ dependencies:
       如果想要响应微信分享登录resp需要在mainActivity同级目录下创建wxapi文件夹
       下面新建WXEntryACtivity集成Activity(需要在`AndroidManifest.xml`注册）
 ```
-    <activity android:name=".wxapi.WXEntryActivity"/>
+    <activity android:name=".wxapi.WXEntryActivity" android:exported="true" android:launchMode="singleTop"/>
 ```
 
 ```
