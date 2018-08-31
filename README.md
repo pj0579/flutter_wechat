@@ -1,7 +1,7 @@
 # flutter_wechat
 
 A  flutter plugin to use wechat.
-
+测试使用暂时不维护了 有需要的请使用 https://github.com/OpenFlutter/fluwx
 ## Features
 - [X]  Add Login
 - [X]  Add Pay
